@@ -1,4 +1,8 @@
 import logging
+import os
+import http.server
+import socketserver
+from threading import Thread
 from telegram import Update, BotCommand
 from telegram.ext import Updater, CommandHandler, CallbackContext
 
@@ -9,8 +13,23 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Define your bot token
-TOKEN = '7269675192:AAFsTWjr2e2uhLLFfSpRpRbsAioJ0ELyyh8'
+# Get the bot token from environment variables
+TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+
+# Define a simple request handler for the dummy HTTP server
+class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b'Hello, world!')
+
+def start_http_server():
+    port = int(os.getenv('PORT', 8000))
+    handler = SimpleHTTPRequestHandler
+    with socketserver.TCPServer(("", port), handler) as httpd:
+        logger.info(f"Serving HTTP on port {port}")
+        httpd.serve_forever()
 
 # Start command handler
 def start(update: Update, context: CallbackContext) -> None:
@@ -32,6 +51,11 @@ def main() -> None:
 
     # Start the Bot
     updater.start_polling()
+
+    # Start the dummy HTTP server
+    http_thread = Thread(target=start_http_server)
+    http_thread.start()
+
     updater.idle()
 
 if __name__ == '__main__':
