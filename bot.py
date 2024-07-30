@@ -1,50 +1,13 @@
-import logging
-import os
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler
 
-import http.server
-import socketserver
-from threading import Thread
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, BotCommand
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
+# Replace 'YOUR_BOT_TOKEN' with your actual bot token
+BOT_TOKEN = '7269675192:AAFsTWjr2e2uhLLFfSpRpRbsAioJ0ELyyh8'
 
-# Enable logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-logger = logging.getLogger(__name__)
+async def start(update: Update, context) -> None:
+    await update.message.reply_text('Hello! Use /demoinline to get an inline button.')
 
-# Get the bot token from environment variables
-TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-
-# Define a simple request handler for the dummy HTTP server
-class SimpleHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        self.wfile.write(b'Hello, world!')
-
-def start_http_server():
-    port = int(os.getenv('PORT', 8000))
-    handler = SimpleHTTPRequestHandler
-    with socketserver.TCPServer(("", port), handler) as httpd:
-        logger.info(f"Serving HTTP on port {port}")
-        httpd.serve_forever()
-
-# Start command handler
-def start(update: Update, context: CallbackContext) -> None:
-    commands = [
-        BotCommand("newto", "Create a new TO"),
-        BotCommand("pastto", "View past TOs"),
-        BotCommand("deletecurrentto", "Delete the current TO"),
-        BotCommand("inlinekey", "Show inline keyboard")
-    ]
-    context.bot.set_my_commands(commands)
-    update.message.reply_text('Commands set successfully')
-
-# Inline keyboard handler
-def inlinekey(update: Update, context: CallbackContext) -> None:
+async def demoinline(update: Update, context) -> None:
     keyboard = [
         [
             InlineKeyboardButton("Option 1", callback_data='1'),
@@ -56,31 +19,22 @@ def inlinekey(update: Update, context: CallbackContext) -> None:
         ],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+    await update.message.reply_text('Please choose:', reply_markup=reply_markup)
 
-def button(update: Update, context: CallbackContext) -> None:
+async def button(update: Update, context) -> None:
     query = update.callback_query
-    query.answer()
-    query.edit_message_text(text=f"You chose option {query.data}")
+    await query.answer()
+    selection = query.data
+    await query.edit_message_text(text=f"Button {selection} was clicked.")
 
-# Define main function to start the bot
 def main() -> None:
-    updater = Updater(TOKEN)
-    dispatcher = updater.dispatcher
+    application = Application.builder().token(BOT_TOKEN).build()
 
-    # Add command handlers
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("inlinekey", inlinekey))
-    dispatcher.add_handler(CallbackQueryHandler(button))
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("demoinline", demoinline))
+    application.add_handler(CallbackQueryHandler(button))
 
-    # Start the Bot
-    updater.start_polling()
-
-    # Start the dummy HTTP server
-    http_thread = Thread(target=start_http_server)
-    http_thread.start()
-
-    updater.idle()
+    application.run_polling()
 
 if __name__ == '__main__':
     main()
