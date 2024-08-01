@@ -2,7 +2,7 @@ import os
 import subprocess
 import time
 import requests
-from bot import application  # Import the 'application' object directly from bot.py
+from bot import application
 from webhookserver import run_server
 
 # Ensure your bot token and ngrok authtoken are set
