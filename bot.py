@@ -1,8 +1,14 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler
+from telegram.helpers import create_deep_linked_url
+from flask import Flask, request
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 BOT_TOKEN = '7269675192:AAFsTWjr2e2uhLLFfSpRpRbsAioJ0ELyyh8'
+WEBHOOK_URL = 'https://your-ngrok-url.ngrok.io/webhook'  # Replace with your ngrok or server URL
+
+# Create the application object
+application = Application.builder().token(BOT_TOKEN).build()
 
 async def start(update: Update, context) -> None:
     await update.message.reply_text('Hello! Use /demoinline to get an inline button.')
@@ -27,11 +33,22 @@ async def button(update: Update, context) -> None:
     selection = query.data
     await query.edit_message_text(text=f"Button {selection} was clicked.")
 
-def get_application() -> Application:
-    application = Application.builder().token(BOT_TOKEN).build()
+def setup_webhook(application: Application) -> None:
+    # Set webhook URL
+    application.bot.set_webhook(url=WEBHOOK_URL)
 
+def main() -> None:
+    # Add handlers
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("demoinline", demoinline))
     application.add_handler(CallbackQueryHandler(button))
+    
+    # Setup webhook
+    setup_webhook(application)
+    
+    # Run the webhook server
+    print("Webhook server is running...")
+    application.run_webhook(port=8443)  # Ensure port matches with ngrok configuration
 
-    return application
+if __name__ == '__main__':
+    main()
