@@ -1,6 +1,5 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler
-from flask import Flask, request
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 BOT_TOKEN = '7269675192:AAFsTWjr2e2uhLLFfSpRpRbsAioJ0ELyyh8'
@@ -41,10 +40,10 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("demoinline", demoinline))
     application.add_handler(CallbackQueryHandler(button))
-    
+
     # Setup webhook
     setup_webhook(application)
-    
+
     # Run the webhook server
     print("Webhook server is running...")
     application.run_webhook(port=8443)  # Ensure port matches with ngrok configuration
