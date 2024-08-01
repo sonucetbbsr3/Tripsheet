@@ -27,14 +27,11 @@ async def button(update: Update, context) -> None:
     selection = query.data
     await query.edit_message_text(text=f"Button {selection} was clicked.")
 
-def main() -> None:
+def get_application() -> Application:
     application = Application.builder().token(BOT_TOKEN).build()
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("demoinline", demoinline))
     application.add_handler(CallbackQueryHandler(button))
 
-    application.run_polling()
-
-if __name__ == '__main__':
-    main()
+    return application
