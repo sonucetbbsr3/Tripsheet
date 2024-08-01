@@ -1,6 +1,5 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler
-from telegram.helpers import create_deep_linked_url
 from flask import Flask, request
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
