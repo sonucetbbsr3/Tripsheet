@@ -1,9 +1,7 @@
 from flask import Flask, request
-from telegram import Update
-from bot import get_application
+from bot import application
 
 app = Flask(__name__)
-application = get_application()
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
