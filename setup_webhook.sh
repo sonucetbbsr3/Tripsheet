@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Ngrok authtoken
 NGROK_AUTHTOKEN="2YfvBHBBPX6ARFDG7S4ZM0jEupY_5CcfkAyWEuxNJUjS1iKeL"
 
