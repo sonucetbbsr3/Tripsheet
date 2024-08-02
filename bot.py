@@ -1,9 +1,10 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler
+from telegram.helpers import create_deep_linked_url
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 BOT_TOKEN = '7269675192:AAFsTWjr2e2uhLLFfSpRpRbsAioJ0ELyyh8'
-WEBHOOK_URL = 'https://your-ngrok-url.ngrok.io/webhook'  # Replace with your ngrok or server URL
+WEBHOOK_URL = 'https://your-ngrok-url.ngrok.io/webhook'  # This will be set dynamically by the setup script
 
 # Create the application object
 application = Application.builder().token(BOT_TOKEN).build()
@@ -40,10 +41,10 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("demoinline", demoinline))
     application.add_handler(CallbackQueryHandler(button))
-
+    
     # Setup webhook
     setup_webhook(application)
-
+    
     # Run the webhook server
     print("Webhook server is running...")
     application.run_webhook(port=8443)  # Ensure port matches with ngrok configuration
