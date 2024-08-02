@@ -1,6 +1,6 @@
 from flask import Flask, request
-from bot import application
 from telegram import Update
+from bot import application
 
 app = Flask(__name__)
 
