@@ -1,10 +1,11 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler
-from telegram.helpers import create_deep_linked_url
+from dotenv import load_dotenv
+import os
 
-# Replace 'YOUR_BOT_TOKEN' with your actual bot token
-BOT_TOKEN = '7269675192:AAFsTWjr2e2uhLLFfSpRpRbsAioJ0ELyyh8'
-WEBHOOK_URL = 'https://your-ngrok-url.ngrok.io/webhook'  # This will be set dynamically by the setup script
+# Load environment variables
+load_dotenv()
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 # Create the application object
 application = Application.builder().token(BOT_TOKEN).build()
@@ -33,8 +34,8 @@ async def button(update: Update, context) -> None:
     await query.edit_message_text(text=f"Button {selection} was clicked.")
 
 def setup_webhook(application: Application) -> None:
-    # Set webhook URL
-    application.bot.set_webhook(url=WEBHOOK_URL)
+    # This function is now redundant as webhook setup is handled in setup_webhook.sh
+    pass
 
 def main() -> None:
     # Add handlers
@@ -42,11 +43,7 @@ def main() -> None:
     application.add_handler(CommandHandler("demoinline", demoinline))
     application.add_handler(CallbackQueryHandler(button))
     
-    # Setup webhook
-    setup_webhook(application)
-    
     # Run the webhook server
-    print("Webhook server is running...")
     application.run_webhook(port=8443)  # Ensure port matches with ngrok configuration
 
 if __name__ == '__main__':
