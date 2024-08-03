@@ -32,9 +32,9 @@ async def button(update: Update, context) -> None:
     selection = query.data
     await query.edit_message_text(text=f"Button {selection} was clicked.")
 
-def setup_webhook(application: Application, webhook_url: str) -> None:
+def setup_webhook(application: Application) -> None:
     # Set webhook URL
-    application.bot.set_webhook(url=webhook_url)
+    application.bot.set_webhook(url=WEBHOOK_URL)
 
 def main() -> None:
     # Add handlers
@@ -42,9 +42,8 @@ def main() -> None:
     application.add_handler(CommandHandler("demoinline", demoinline))
     application.add_handler(CallbackQueryHandler(button))
     
-    # Set webhook URL
-    # This value should be set dynamically after running setup_webhook.sh
-    setup_webhook(application, WEBHOOK_URL)
+    # Setup webhook
+    setup_webhook(application)
     
     # Run the webhook server
     print("Webhook server is running...")
