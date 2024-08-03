@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# Ngrok authtoken
-NGROK_AUTHTOKEN="2YfvBHBBPX6ARFDG7S4ZM0jEupY_5CcfkAyWEuxNJUjS1iKeL"
-
-# Your bot token
-BOT_TOKEN="7269675192:AAFsTWjr2e2uhLLFfSpRpRbsAioJ0ELyyh8"
+# Load environment variables
+source .env
 
 # Download jq if not present
 if ! [ -x "$(command -v jq)" ]; then
