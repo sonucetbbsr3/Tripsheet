@@ -1,11 +1,12 @@
 import os
 from dotenv import load_dotenv
 from telegram import Bot, Update
-from telegram.ext import CommandHandler, CallbackQueryHandler, Updater
+from telegram.ext import CommandHandler, Dispatcher
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = Bot(token=BOT_TOKEN)
+dispatcher = Dispatcher(bot, None, workers=0)
 
 def start(update, context):
     update.message.reply_text('Hello! Use /demoinline to get started.')
@@ -13,15 +14,8 @@ def start(update, context):
 def demoinline(update, context):
     update.message.reply_text('This is an inline demo.')
 
-def main():
-    updater = Updater(token=BOT_TOKEN, use_context=True)
-    dp = updater.dispatcher
+def handle_update(update):
+    dispatcher.process_update(update)
 
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("demoinline", demoinline))
-
-    updater.start_polling()
-    updater.idle()
-
-if __name__ == '__main__':
-    main()
+dispatcher.add_handler(CommandHandler("start", start))
+dispatcher.add_handler(CommandHandler("demoinline", demoinline))
