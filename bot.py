@@ -1,21 +1,21 @@
 import os
 from dotenv import load_dotenv
 from telegram import Bot, Update
-from telegram.ext import CommandHandler, Dispatcher
+from telegram.ext import CommandHandler, Application, ContextTypes
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = Bot(token=BOT_TOKEN)
-dispatcher = Dispatcher(bot, None, workers=0)
+application = Application.builder().token(BOT_TOKEN).build()
 
-def start(update, context):
-    update.message.reply_text('Hello! Use /demoinline to get started.')
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text('Hello! Use /demoinline to get started.')
 
-def demoinline(update, context):
-    update.message.reply_text('This is an inline demo.')
+async def demoinline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text('This is an inline demo.')
 
 def handle_update(update):
-    dispatcher.process_update(update)
+    application.process_update(update)
 
-dispatcher.add_handler(CommandHandler("start", start))
-dispatcher.add_handler(CommandHandler("demoinline", demoinline))
+application.add_handler(CommandHandler("start", start))
+application.add_handler(CommandHandler("demoinline", demoinline))
