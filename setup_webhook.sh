@@ -1,5 +1,5 @@
 #!/bin/bash
-source myenv/bin/activate
+source /root/Tripsheet/myenv/bin/activate
 
 NGROK_URL=$(python get_ngrok_url.py)
 WEBHOOK_URL="$NGROK_URL/webhook"
