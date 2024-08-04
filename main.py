@@ -15,3 +15,4 @@ if __name__ == '__main__':
     set_webhook()
     time.sleep(5)
     import webhookserver
+    webhookserver.run()
