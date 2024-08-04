@@ -1,18 +1,13 @@
 import subprocess
-import time
-from dotenv import load_dotenv
-
-load_dotenv()
+import os
 
 def set_webhook():
-    result = subprocess.run(['./setup_webhook.sh'], check=True, capture_output=True, text=True)
-    if result.returncode != 0:
-        print(f"Failed to set webhook: {result.stderr}")
-    else:
-        print("Webhook set successfully")
+    script_path = os.path.join(os.path.dirname(__file__), 'setup_webhook.sh')
+    result = subprocess.run([script_path], check=True, capture_output=True, text=True)
+    print(result.stdout)
+    print(result.stderr)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     set_webhook()
-    time.sleep(5)
-    import webhookserver
-    webhookserver.run()
+    from webhookserver import app
+    app.run(host='0.0.0.0', port=5000)
