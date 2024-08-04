@@ -1,10 +1,9 @@
-# get_ngrok_url.py
 import requests
+import json
 
 def get_ngrok_url():
-    url = "http://localhost:4040/api/tunnels"
-    response = requests.get(url)
-    data = response.json()
+    response = requests.get("http://localhost:4040/api/tunnels")
+    data = json.loads(response.text)
     public_url = data['tunnels'][0]['public_url']
     return public_url
 
