@@ -13,5 +13,8 @@ def webhook():
             bot.process_new_updates([update])
         return 'OK', 200
 
-if __name__ == "__main__":
+def run():
     app.run(port=5000)
+
+if __name__ == "__main__":
+    run()
