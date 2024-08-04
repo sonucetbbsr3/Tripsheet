@@ -1,6 +1,6 @@
 from flask import Flask, request
 from telegram import Update
-from bot import bot
+from bot import bot, handle_update
 
 app = Flask(__name__)
 
@@ -10,7 +10,7 @@ def webhook():
         update = request.get_json()
         if update:
             update = Update.de_json(update, bot)
-            bot.process_new_updates([update])
+            handle_update(update)
         return 'OK', 200
 
 def run():
