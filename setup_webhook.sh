@@ -1,4 +1,4 @@
-# setup_webhook.sh
+#!/bin/bash
 source myenv/bin/activate
 
 NGROK_URL=$(python get_ngrok_url.py)
