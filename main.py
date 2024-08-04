@@ -1,15 +1,17 @@
-import os
 import subprocess
+import time
 from dotenv import load_dotenv
-from webhookserver import run_server
 
-# Load environment variables
 load_dotenv()
 
 def set_webhook():
-    # Run the setup script to configure ngrok and set the webhook
-    subprocess.run(['./setup_webhook.sh'], check=True)
+    result = subprocess.run(['./setup_webhook.sh'], check=True, capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"Failed to set webhook: {result.stderr}")
+    else:
+        print("Webhook set successfully")
 
 if __name__ == '__main__':
     set_webhook()
-    run_server()
+    time.sleep(5)
+    import webhookserver
